@@ -1,0 +1,156 @@
+<div class="container d-flex justify-content-center">
+  <div
+    class="col-4 mt-2 p-3 b-3 border"
+  >
+    <h2 class="text-center">Registration</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="SaveData()">
+      <div class="mb-2">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          id="name"
+          formControlName="name"
+        />
+        <div
+          class="text-danger"
+          *ngIf="
+            registerForm.get('name')?.touched && registerForm.get('name')?.invalid
+          "
+        >
+          <div *ngIf="registerForm.get('name')?.hasError('required')">
+            The name field is mandatory
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          class="form-control"
+          name="username"
+          id="username"
+          formControlName="username"
+        />
+        <div
+          class="text-danger"
+          *ngIf="
+            registerForm.get('username')?.touched &&
+            registerForm.get('username')?.invalid
+          "
+        >
+          <div *ngIf="registerForm.get('username')?.hasError('required')">
+            The username field is mandatory
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          name="email"
+          id="email"
+          formControlName="email"
+        />
+        <div
+          class="text-danger"
+          *ngIf="
+            registerForm.get('email')?.touched &&
+            registerForm.get('email')?.invalid
+          "
+        >
+          <div *ngIf="registerForm.get('email')?.hasError('required')">
+            The email field is mandatory
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="phone">Phone</label>
+        <input
+          type="text"
+          class="form-control"
+          name="phone"
+          id="phone"
+          formControlName="phone"
+        />
+        <div
+          class="text-danger"
+          *ngIf="
+            registerForm.get('phone')?.touched &&
+            registerForm.get('phone')?.invalid
+          "
+        >
+          <div *ngIf="registerForm.get('phone')?.hasError('required')">
+            The phone field is mandatory
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          id="password"
+          formControlName="password"
+        />
+        <div
+          class="text-danger"
+          *ngIf="
+            registerForm.get('password')?.touched &&
+            registerForm.get('password')?.invalid
+          "
+        >
+          <div *ngIf="registerForm.get('password')?.hasError('required')">
+            The password field is mandatory
+          </div>
+          <div *ngIf="registerForm.get('password')?.hasError('pattern') && registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+            Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="role">Role</label>
+        <select class="form-select" aria-label="Default select example" formControlName="role">
+          <option value="--Select Role--">--Select Role--</option>
+          <option value="admin">admin</option>
+          <option value="user">user</option>
+        </select>
+        <div
+          class="text-danger"
+          *ngIf="
+            registerForm.get('role')?.touched &&
+            registerForm.get('role')?.invalid
+          "
+        >
+          <div *ngIf="registerForm.get('role')?.hasError('role')">
+            The role field is mandatory
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2 d-flex justify-content-around">
+        <input
+          type="submit"
+          value="Submit"
+          class="btn btn-success border border-dark mr-3"
+          style="width: 80px"
+          [disabled]="!registerForm.valid"
+        />
+        <button
+          class="btn btn-danger border border-dark mr-3"
+          (click)="Cancel()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

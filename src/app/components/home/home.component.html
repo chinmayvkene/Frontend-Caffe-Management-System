@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid p-3">
+    <div routerLink="/">
+         <h2 class="ms-2">Caffe Management System</h2>
+    </div>
+    
+    <!-- <div class="search-bar">
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 600px;"/>
+            <button class="btn btn-success" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div> -->
+    
+    <div class ='me-3'>
+        <button class="btn btn-light me-2" routerLink="/login">
+             Login
+        </button>
+
+        <span>
+            {{loginUser}}
+        </span>
+
+        <div class="btn-group" style="margin-right: 60px;" *ngIf="loginUser">
+            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            
+            <ul class="dropdown-menu" *ngIf="loginUser">
+                <li><a class="dropdown-item btn">{{loginUser}}</a></li>
+                <li><button class="dropdown-item" routerLink="/login/resetpassword">Reset password</button></li>
+                <li><hr class="dropdown-divider"></li>
+                    <!-- <li><a class="dropdown-item btn" (click)="Logout()" [disabled]="!loginUser">Logout</a></li> -->
+                <li>
+                    <button class="dropdown-item btn" (click)="Logout()">Logout</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </div>
+</nav>
+<div *ngIf="loginUser">
+    <app-navbar></app-navbar>
+</div>
+<!-- <div class="container-fluid">
+    <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Caffe Image">
+</div> -->
+<section>
+    <router-outlet></router-outlet>
+</section>

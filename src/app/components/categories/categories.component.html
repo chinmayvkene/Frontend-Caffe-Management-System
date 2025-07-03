@@ -1,0 +1,230 @@
+<div class="mt-3 ms-3 d-flex justify-content-between">
+  <button
+    *ngIf="role == 'admin'"
+    type="button"
+    class="btn btn-success text-white me-2"
+    data-bs-toggle="modal"
+    data-bs-target="#myModal"
+    (click)="OpenModal()"
+  >
+    Add Category
+  </button>
+
+  <button class="btn btn-primary text-white me-3" routerLink="/dashboard"><i class="bi bi-arrow-left-circle"></i>Back</button>
+</div>
+
+<div class="mx-3 mt-2">
+  <div class="col-4">
+    <input 
+    class="form-control me-2" 
+    type="search" 
+    placeholder="Search by name" 
+    aria-label="Search"
+    [(ngModel)]="filterText"
+    >
+  </div>
+  
+
+  <table class="table table-hover mt-3">
+    <thead>
+      <tr>
+        <th>Category Id</th>
+        <th>Category Name</th>
+        <th *ngIf="role == 'admin'">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="categories.length > 0; else noCategories">
+        <tr *ngFor="let category of categories | filtercategory: filterText">
+          <td>{{ category.categoryId }}</td>
+          <td>{{ category.categoryName }}</td>
+          <td colspan="2" *ngIf="role == 'admin'">
+            <!-- <a
+              routerLink=""
+              class="btn btn-primary me-2 mb-1"
+              title="Edit"
+              (click)="OpenModalEdit(category)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </a> -->
+            <button
+              type="button"
+              class="btn btn-success text-white me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#myModalEdit"
+              (click)="OpenModalEdit(category)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <a
+              class="btn btn-danger me-2"
+              (click)="DeleteCategory(category.categoryId)"
+              title="Delete"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </a>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #noCategories>
+        <tr>
+          <td colspan="3"><h3 class="text-center">No Categories found</h3></td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Modal Category Add -->
+<div
+  class="modal fade"
+  id="myModal"
+  tabindex="-1"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(255, 152, 0);">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">New Category</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+          <!-- <label class="mb-2" for="category"><strong>Category</strong></label>
+          <input
+            type="text"
+            class="form-control"
+            name="category"
+            id="category"
+            [(ngModel)]="categoryName"
+          />
+        </div> -->
+        <form [formGroup]="categoryForm" >
+          <div class="mb-2">
+            <label for="category">Category</label>
+            <input
+              type="text"
+              class="form-control"
+              name="category"
+              id="category"
+              formControlName="categoryName"
+            />
+            <div class="text-danger" *ngIf="categoryForm.get('categoryName')?.touched && categoryForm.get('categoryName')?.invalid">
+              <div *ngIf="categoryForm.get('categoryName')?.hasError('required')">
+                The name field is mandatory
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-dark"
+          data-bs-dismiss="modal"
+          (click)="CloseModal()"
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="AddCategory()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Category Edit -->
+<div
+  class="modal fade"
+  id="myModalEdit"
+  tabindex="-1"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(156, 39, 176);">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-white">Edit Category</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+          <!-- <label class="mb-2" for="category"><strong>Category</strong></label>
+          <input
+            type="text"
+            class="form-control"
+            name="category"
+            id="category"
+            [(ngModel)]="categoryName"
+          />
+        </div> -->
+        <form [formGroup]="categoryForm" (ngSubmit)="EditCategory()">
+          <div class="mb-2">
+            <label for="category" class="text-white">Category</label>
+            <input
+              type="text"
+              class="form-control"
+              name="category"
+              id="category"
+              formControlName="categoryName"
+            />
+            <div class="text-danger" *ngIf="categoryForm.get('categoryName')?.touched && categoryForm.get('categoryName')?.invalid">
+              <div *ngIf="categoryForm.get('categoryName')?.hasError('required')">
+                The name field is mandatory
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-dark"
+          data-bs-dismiss="modal"
+          (click)="CloseModalEdit()"
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="EditCategory()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

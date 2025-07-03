@@ -1,0 +1,71 @@
+<div class="d-flex justify-content-center align-items-center">
+  <div class="col-12 col-md-6 col-lg-4 p-4">
+    <div class="card">
+      <div class="card-header text-center">
+        <h2>Sign In</h2>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="SaveData()">
+          <div class="mb-2">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              id="username"
+              formControlName="username"
+            />
+            <div
+              class="text-danger"
+              *ngIf="
+                loginForm.get('username')?.touched && loginForm.get('username')?.invalid
+              "
+            >
+              <div *ngIf="loginForm.get('username')?.hasError('required')">
+                The username field is mandatory
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              id="password"
+              formControlName="password"
+            />
+            <div
+              class="text-danger"
+              *ngIf="
+                loginForm.get('password')?.touched && loginForm.get('password')?.invalid
+              "
+            >
+              <div *ngIf="loginForm.get('password')?.hasError('required')">
+                The password field is mandatory
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2 d-flex justify-content-around">
+            <input
+              type="submit"
+              value="Submit"
+              class="btn btn-success border border-dark mr-3"
+              style="width: 80px"
+              [disabled]="!loginForm.valid"
+              style="width: 150px;"
+            />
+            <a routerLink="/login/register" class="btn btn-info text-white border border-dark" style="width:150px">Register</a>
+          </div>
+
+          <div>
+            <a routerLink="/login/forgetpassword" style="width:150px">Forget passowrd</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

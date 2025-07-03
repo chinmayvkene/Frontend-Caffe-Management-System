@@ -1,0 +1,333 @@
+<div class="mt-3 ms-3 d-flex justify-content-between">
+  <button
+    *ngIf="role == 'admin'"
+    type="button"
+    class="btn btn-success text-white me-2"
+    data-bs-toggle="modal"
+    data-bs-target="#myModal"
+    (click)="OnAddProductClick()"
+  >
+    Add Product
+  </button>
+  <button class="btn btn-primary text-white me-3" routerLink="/dashboard"><i class="bi bi-arrow-left-circle"></i>Back</button>
+</div>
+
+<div class="mx-3 mt-2">
+  <div class="col-4">
+    <input 
+    class="form-control me-2" 
+    type="search" 
+    placeholder="Search" 
+    aria-label="Search"
+    [(ngModel)]="filterText"
+    >
+  </div>
+
+  <table class="table table-hover mt-3">
+    <thead>
+      <tr>
+        <th>Product Id</th>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Image</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>IsActive</th>
+        <th *ngIf="role == 'admin'">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="productDto.length > 0; else noProducts">
+        <tr *ngFor="let product of productDto | filterproduct:filterText">
+          <td>{{ product.productId }}</td>
+          <td>{{ product.productName }}</td>
+          <td>{{ product.description }}</td>
+          <td>
+            <!-- <img [src]="'http://localhost:5210/' + product.imagePath" alt="Product Image" style="width: 80px;height: 50px;border-radius: 3px;"/> -->
+             <img [src]="product.imagePath" alt="Product Image" style="width: 80px;height: 50px;border-radius: 3px;"/>
+          </td>
+          <td>{{ product.categoryName }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.status }}</td>
+          <td colspan="2" *ngIf="role == 'admin'">
+            <button
+              type="button"
+              class="btn btn-success text-white me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#myModalEdit"
+              (click)="OpenModalEdit(product)"
+              
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <a
+              class="btn btn-danger me-2"
+              (click)="DeleteProduct(product.productId)"
+              title="Delete"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </a>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #noProducts>
+        <tr>
+          <td colspan="7"><h3 class="text-center">No products found</h3></td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Modal Product Add -->
+<div
+  class="modal fade"
+  id="myModal"
+  tabindex="-1"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(255, 152, 0);">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">New Product</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form [formGroup]="productForm" >
+          <div class="mb-2">
+            <label for="category">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="category"
+              id="category"
+              formControlName="productName"
+            />
+            <div class="text-danger" *ngIf="productForm.get('productName')?.touched && productForm.get('productName')?.invalid">
+              <div *ngIf="productForm.get('productName')?.hasError('required')">
+                The name field is mandatory
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label for="description">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              name="description"
+              id="description"
+              formControlName="description"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label for="category">Category</label>
+            <select class="form-select" aria-label="Default select example" formControlName="categoryId">
+                <option value="0">--Select Category--</option>
+                <option *ngFor="let category of categories" [value]="category.categoryId">{{category.categoryName}}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label for="price">Price</label>
+            <input
+              type="text"
+              class="form-control"
+              name="price"
+              id="price"
+              formControlName="price"
+            />
+            <div class="text-danger" *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid">
+              <div *ngIf="productForm.get('price')?.hasError('required')">
+                The price field is mandatory
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label for="image">Image</label>
+            <input
+              type="file"
+              class="form-control"
+              name="image"
+              id="image"
+              (change)="OnFileSelected($event)"
+            />
+            <input type="text" class="form-control" name="imagePath" id="imagePath" formControName="imagePath" style="display: none;"/>
+          </div>
+
+          <div class="form-check">
+            <label class="form-check-label" for="checkDefault">
+                IsActive
+            </label>
+            <input class="form-check-input" type="checkbox" value="true" id="checkDefault" formControlName="status">
+          </div>
+
+        </form>
+      </div>
+      
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-dark"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="AddProduct()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Product Edit -->
+<div
+  class="modal fade"
+  id="myModalEdit"
+  tabindex="-1"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(156, 39, 176);">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-white">Edit Product</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form [formGroup]="productForm" (ngSubmit)="EditProduct()">
+          <div class="mb-2">
+            <label for="productName">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="productName"
+              id="productName"
+              formControlName="productName"
+            />
+            <div class="text-danger" *ngIf="productForm.get('productName')?.touched && productForm.get('productName')?.invalid">
+              <div *ngIf="productForm.get('productName')?.hasError('required')">
+                The name field is mandatory
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label for="description">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              name="description"
+              id="description"
+              formControlName="description"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label for="category">Category</label>
+            <select class="form-select" aria-label="Default select example" formControlName="categoryId">
+                <option [value]="0">--Select Category--</option>
+                <option *ngFor="let category of categories" [value]="category.categoryId">{{category.categoryName}}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label for="price">Price</label>
+            <input
+              type="text"
+              class="form-control"
+              name="price"
+              id="price"
+              formControlName="price"
+            />
+            <div class="text-danger" *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid">
+              <div *ngIf="productForm.get('price')?.hasError('required')">
+                The price field is mandatory
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="mb-2">
+            <img [src]="'http://localhost:5210/' + productForm.get('imagePath')?.value" alt="Product Image" style="width: 80px;height: 50px;border-radius: 3px;"/>
+            <br/>
+            <label for="fileName" class="text-white">{{GetFileName(productForm.get('imagePath')?.value)}}</label>
+          </div> -->
+
+          <div class="mb-2">
+            <label for="image">Image</label>
+            <input
+              type="file"
+              class="form-control"
+              id="imageEdit"
+              name="imageEdit"
+              (change)="OnFileSelected($event)"
+            />
+            <!-- <img class="mt-2" [src]="'http://localhost:5210/' + productForm.get('imagePath')?.value" (change)="OnFileSelected($event)" alt="Product Image" style="width: 80px;height: 50px;border-radius: 3px;"/> -->
+             <img class="mt-2" [src]="productForm.get('imagePath')?.value" (change)="OnFileSelected($event)" alt="Product Image" style="width: 80px;height: 50px;border-radius: 3px;"/>
+            <br/>
+            <label for="fileName" class="text-white">{{ GetFileName(productForm.get('imagePath')?.value) }}</label>
+            <input type="text" class="form-control" name="imagePath" id="imagePath" formControName="imagePath" style="display: none;"/>
+          </div>
+
+          <div class="form-check">
+            <label class="form-check-label" for="checkDefault">
+                IsActive
+            </label>
+            <input class="form-check-input" type="checkbox" value="true" id="checkDefault" formControlName="status">
+          </div>
+        </form>
+      </div>
+      
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-dark"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="EditProduct()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

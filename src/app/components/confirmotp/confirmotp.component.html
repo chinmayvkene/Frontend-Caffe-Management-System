@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-center align-items-center">
+  <div class="col-12 col-md-6 col-lg-4 p-4">
+    <div class="card">
+      <div class="card-header text-center">
+        <h2>OTP Verification</h2>
+      </div>
+      <div class="card-body">
+        <!-- <form [formGroup]="loginForm" (ngSubmit)="ConfirmOtp()"> -->
+          <div class="mb-2">
+            <label for="otp">OTP</label>
+            <input
+              type="text"
+              class="form-control"
+              name="otp"
+              id="otp"
+              [(ngModel)]="otptext"
+            />
+
+          <div class="mt-2 d-flex justify-content-around">
+            <input
+              type="submit"
+              value="Submit"
+              class="btn btn-success border border-dark mr-3"
+              (click)="ConfirmOtp()"
+              style="width: 150px;"
+            />
+            <a routerLink="/login/register" class="btn btn-info text-white border border-dark" style="width:150px">Cancel</a>
+          </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
